@@ -6,6 +6,8 @@ from data import consulta_inicial
 
 app = Flask(__name__)
 app.secret_key = os.urandom(24)
+
+# AQUI VA LA CONFIGURACION DE FIREBASE CUANDO UNO PONE CREAR PROYECTO
 config = {
 
     "apiKey": "AIzaSyCB_XoI-km0-2g38ii0cm0bWuIZwTDwIY0",
@@ -33,13 +35,17 @@ def inicio():
         password = request.form['pass']
         session['password'] = password
         try:
+            # AQUI PERMITE INICIAR SESION, VA TAL CUAL COMO SALE AHI AUTH.SING....
+            # NO CAMBIARLO DE NOMBRE
             user = auth.sign_in_with_email_and_password(email, password)
             user_id = user['idToken']
             session['usr'] = user_id
 
+            # SE DIRIGE A DATA.PY A REALIZAR LA CONSULTA SQL
             cursor_home = consulta_inicial.select_inicial()
             data_home = cursor_home.fetchall()
 
+            # LO DIRECCIONO A LA HTML Q QUIERO MAS LE PASO LA INFO Q TRAE EN EL SQL
             return render_template('home.html',data_home = data_home)
         except:
             return render_template('login.html', us=unsuccessful)
@@ -54,6 +60,8 @@ def create_account():
             email = request.form['name']
             password = request.form['pass']
             try:
+                # AQUI PERMITE CREAR CUENTA, VA TAL CUAL COMO SALE AHI AUTH.CREATE....
+                # NO CAMBIARLO DE NOMBRE
                 auth.create_user_with_email_and_password(email, password)
                 return render_template('crear_cuenta.html',s=successful)
             except :
@@ -65,6 +73,8 @@ def create_account():
 def forgot_password():
     if (request.method == 'POST'):
             email = request.form['name']
+            # AQUI PERMITE RECORDAR CONTRASENIA, VA TAL CUAL COMO SALE AHI AUTH.CREATE....
+            # NO CAMBIARLO DE NOMBRE
             auth.send_password_reset_email(email)
             return render_template('login.html')
     return render_template('recordar_cuenta.html')
