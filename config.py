@@ -1,5 +1,6 @@
 import psycopg2
 
+# conexion a la BD
 class conexion:
     @staticmethod
     def conect_post():
